@@ -88,21 +88,3 @@ public class PaymentInitiation {
     @Version
     private Integer version;
 }
-
-enum PaymentProvider {
-    PLAID,
-    STRIPE,
-    BANK_OF_AMERICA,
-    CHASE,
-    WELLS_FARGO
-}
-
-enum PaymentStatus {
-    PENDING,
-    PROCESSING,
-    COMPLETED,
-    FAILED,
-    CANCELLED,
-    REQUIRES_ACTION,
-    REQUIRES_CONFIRMATION
-}
