@@ -1,7 +1,7 @@
 package com.rentflow.scheduling.service;
 
-import com.rentflow.events.PaymentCreated;
-import com.rentflow.events.PaymentScheduled;
+import com.rentflow.scheduling.events.PaymentCreated;
+import com.rentflow.scheduling.events.PaymentScheduled;
 import com.rentflow.scheduling.dto.CreateScheduleRequest;
 import com.rentflow.scheduling.dto.ScheduleResponse;
 import com.rentflow.scheduling.kafka.ScheduleEventPublisher;
@@ -148,8 +148,8 @@ public class SchedulingService {
             schedule.getLeaseId(),
             schedule.getAmount(),
             schedule.getCurrency(),
-            schedule.getPaymentMethod(),
-            com.rentflow.events.PaymentType.RECURRING,
+            schedule.getPaymentMethod().name(),
+            "RECURRING",
             Instant.now(),
             Instant.now(),
             1

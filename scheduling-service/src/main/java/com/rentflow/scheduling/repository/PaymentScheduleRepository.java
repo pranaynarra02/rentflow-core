@@ -4,6 +4,7 @@ import com.rentflow.scheduling.model.PaymentSchedule;
 import com.rentflow.scheduling.model.RecurrencePattern;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
@@ -27,7 +28,7 @@ public interface PaymentScheduleRepository extends JpaRepository<PaymentSchedule
         AND s.nextExecutionTime < :now
         ORDER BY s.nextExecutionTime ASC
         """)
-    List<PaymentSchedule> findSchedulesReadyForExecution(@org.springframework.data.annotation.QueryParam("now") Instant now);
+    List<PaymentSchedule> findSchedulesReadyForExecution(@Param("now") Instant now);
 
     @Query("""
         SELECT COUNT(s) FROM PaymentSchedule s

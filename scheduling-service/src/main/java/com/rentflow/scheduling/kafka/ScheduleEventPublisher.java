@@ -1,7 +1,7 @@
 package com.rentflow.scheduling.kafka;
 
-import com.rentflow.events.PaymentCreated;
-import com.rentflow.events.PaymentScheduled;
+import com.rentflow.scheduling.events.PaymentCreated;
+import com.rentflow.scheduling.events.PaymentScheduled;
 import com.rentflow.scheduling.model.PaymentSchedule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

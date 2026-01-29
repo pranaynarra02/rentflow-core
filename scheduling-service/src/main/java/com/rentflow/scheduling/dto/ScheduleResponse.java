@@ -1,6 +1,6 @@
 package com.rentflow.scheduling.dto;
 
-import com.rentflow.events.PaymentMethod;
+import com.rentflow.scheduling.model.PaymentMethod;
 import com.rentflow.scheduling.model.RecurrencePattern;
 
 import java.math.BigDecimal;
