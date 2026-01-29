@@ -5,12 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import com.plaid.Plaid;
-import com.plaid.exception.PlaidApiException;
-import com.plaid.model.*;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -26,8 +22,6 @@ public class PlaidClient {
 
     @Value("${partners.plaid.environment}")
     private String environment;
-
-    private Plaid plaidClient;
 
     public String initiatePayment(
         UUID paymentId,
