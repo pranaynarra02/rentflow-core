@@ -4,6 +4,7 @@ import com.rentflow.scheduling.events.PaymentCreated;
 import com.rentflow.scheduling.events.PaymentScheduled;
 import com.rentflow.scheduling.dto.CreateScheduleRequest;
 import com.rentflow.scheduling.dto.ScheduleResponse;
+import com.rentflow.scheduling.exception.ScheduleNotFoundException;
 import com.rentflow.scheduling.kafka.ScheduleEventPublisher;
 import com.rentflow.scheduling.model.PaymentSchedule;
 import com.rentflow.scheduling.repository.PaymentScheduleRepository;
