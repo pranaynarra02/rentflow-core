@@ -1,0 +1,137 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: rentflow_test
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      kafka:
+        image: confluentinc/cp-kafka:7.5.0
+        ports:
+          - 9092:9092
+        env:
+          KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+          KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+          KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build payment-service
+        run: |
+          cd payment-service
+          ./gradlew build --no-daemon
+
+      - name: Build scheduling-service
+        run: |
+          cd scheduling-service
+          ./gradlew build --no-daemon
+
+      - name: Build partner-gateway
+        run: |
+          cd partner-gateway
+          ./gradlew build --no-daemon
+
+      - name: Build ledger-service
+        run: |
+          cd ledger-service
+          ./gradlew build --no-daemon
+
+      - name: Run tests
+        run: |
+          for service in payment-service scheduling-service partner-gateway ledger-service; do
+            echo "Testing $service..."
+            cd $service
+            ../gradlew test --no-daemon
+            cd ..
+          done
+
+      - name: Generate test report
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Test Results
+          path: '**/build/test-results/test/TEST-*.xml'
+          reporter: java-junit
+          fail-on-error: true
+
+  docker:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push payment-service
+        uses: docker/build-push-action@v5
+        with:
+          context: ./payment-service
+          push: true
+          tags: rentflow/payment-service:latest,rentflow/payment-service:${{ github.sha }}
+
+      - name: Build and push scheduling-service
+        uses: docker/build-push-action@v5
+        with:
+          context: ./scheduling-service
+          push: true
+          tags: rentflow/scheduling-service:latest,rentflow/scheduling-service:${{ github.sha }}
+
+      - name: Build and push partner-gateway
+        uses: docker/build-push-action@v5
+        with:
+          context: ./partner-gateway
+          push: true
+          tags: rentflow/partner-gateway:latest,rentflow/partner-gateway:${{ github.sha }}
+
+      - name: Build and push ledger-service
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ledger-service
+          push: true
+          tags: rentflow/ledger-service:latest,rentflow/ledger-service:${{ github.sha }}

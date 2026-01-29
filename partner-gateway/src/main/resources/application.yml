@@ -1,0 +1,74 @@
+spring:
+  application:
+    name: partner-gateway
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.UUIDSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: partner-gateway
+      key-deserializer: org.apache.kafka.common.serialization.UUIDDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+
+server:
+  port: ${SERVER_PORT:8083}
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+
+partners:
+  plaid:
+    client-id: ${PLAID_CLIENT_ID:test_client_id}
+    secret: ${PLAID_SECRET:test_secret}
+    environment: ${PLAID_ENV:sandbox}
+    base-url: https://${PLAID_ENV:sandbox}.plaid.com
+
+  stripe:
+    api-key: ${STRIPE_API_KEY:sk_test_test_key}
+    webhook-secret: ${STRIPE_WEBHOOK_SECRET:whsec_test_secret}
+    base-url: https://api.stripe.com
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 100
+        minimum-number-of-calls: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+    instances:
+      plaidApi:
+        base-config: default
+      stripeApi:
+        base-config: default
+
+  retry:
+    configs:
+      default:
+        max-attempts: 3
+        wait-duration: 1000ms
+    instances:
+      plaidApi:
+        base-config: default
+      stripeApi:
+        base-config: default
+
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 30s
+    instances:
+      plaidApi:
+        base-config: default
+      stripeApi:
+        base-config: default
