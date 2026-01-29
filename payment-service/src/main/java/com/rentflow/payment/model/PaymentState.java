@@ -1,7 +1,5 @@
 package com.rentflow.payment.model;
 
-import com.rentflow.events.PaymentMethod;
-import com.rentflow.events.PaymentType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
