@@ -132,20 +132,3 @@ public class LedgerEntry {
         this.creditBalance = settledAmount;
     }
 }
-
-enum EntryStatus {
-    PENDING,
-    POSTED,
-    SETTLED,
-    REVERSED
-}
-
-enum LedgerEntryType {
-    RENT_PAYMENT,
-    PARTIAL_PAYMENT,
-    LATE_FEE,
-    SECURITY_DEPOSIT,
-    REFUND,
-    ADJUSTMENT,
-    CHARGEBACK
-}

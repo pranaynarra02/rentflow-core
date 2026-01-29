@@ -4,7 +4,7 @@ import com.rentflow.ledger.dto.CreateEntryRequest;
 import com.rentflow.ledger.model.*;
 import com.rentflow.ledger.repository.AccountRepository;
 import com.rentflow.ledger.repository.LedgerEntryRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
