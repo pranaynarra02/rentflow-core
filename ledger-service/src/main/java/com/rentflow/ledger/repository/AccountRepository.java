@@ -1,5 +1,7 @@
 package com.rentflow.ledger.repository;
 
+import com.rentflow.ledger.model.Account;
+import com.rentflow.ledger.model.AccountType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
