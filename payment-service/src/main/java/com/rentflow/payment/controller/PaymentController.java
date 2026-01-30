@@ -52,8 +52,8 @@ public class PaymentController {
 
     @GetMapping("/tenant/{tenantId}")
     @Operation(summary = "Get payments by tenant")
-    public ResponseEntity<?> getPaymentsByTenant(@PathVariable UUID tenantId) {
-        return ResponseEntity.ok(paymentService.getPaymentsByTenant(tenantId, null));
+    public ResponseEntity<List<PaymentResponse>> getPaymentsByTenant(@PathVariable UUID tenantId) {
+        return ResponseEntity.ok(paymentService.getPaymentsByTenant(tenantId));
     }
 
     @GetMapping("/lease/{leaseId}/total")
