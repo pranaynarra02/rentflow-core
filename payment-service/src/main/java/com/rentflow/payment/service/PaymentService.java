@@ -4,13 +4,16 @@ import com.rentflow.payment.dto.*;
 import com.rentflow.payment.exception.*;
 import com.rentflow.payment.kafka.PaymentEventPublisher;
 import com.rentflow.payment.model.Payment;
+import com.rentflow.payment.model.PaymentMethod;
 import com.rentflow.payment.model.PaymentStatus;
+import com.rentflow.payment.model.PaymentType;
 import com.rentflow.payment.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -111,11 +114,11 @@ public class PaymentService {
     }
 
     @Transactional(readOnly = true)
-    public Page<PaymentResponse> getPaymentsByTenant(UUID tenantId, Pageable pageable) {
+    public List<PaymentResponse> getPaymentsByTenant(UUID tenantId) {
         return paymentRepository.findByTenantIdOrderByCreatedAtDesc(tenantId)
             .stream()
             .map(this::toResponse)
-            .collect(java.util.stream.Collectors.toCollection(() -> new org.springframework.data.domain.PageImpl<>(List.of(), pageable, 0)));
+            .toList();
     }
 
     @Transactional
