@@ -1,7 +1,7 @@
 package com.rentflow.payment.dto;
 
-import com.rentflow.events.PaymentMethod;
-import com.rentflow.events.PaymentType;
+import com.rentflow.payment.model.PaymentMethod;
+import com.rentflow.payment.model.PaymentType;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.Instant;

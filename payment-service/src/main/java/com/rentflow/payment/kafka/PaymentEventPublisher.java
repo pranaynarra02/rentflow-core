@@ -1,7 +1,7 @@
 package com.rentflow.payment.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rentflow.events.*;
+import com.rentflow.payment.events.*;
 import com.rentflow.payment.model.Payment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,8 +40,8 @@ public class PaymentEventPublisher {
             payment.getLeaseId(),
             payment.getAmount(),
             payment.getCurrency(),
-            payment.getPaymentMethod(),
-            payment.getPaymentType(),
+            payment.getPaymentMethod().name(),
+            payment.getPaymentType().name(),
             payment.getScheduledFor(),
             Instant.now(),
             1

@@ -1,6 +1,6 @@
 package com.rentflow.payment.service;
 
-import com.rentflow.events.*;
+import com.rentflow.payment.model.*;
 import com.rentflow.payment.dto.*;
 import com.rentflow.payment.kafka.PaymentEventPublisher;
 import com.rentflow.payment.model.Payment;
