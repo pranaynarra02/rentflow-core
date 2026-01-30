@@ -58,9 +58,7 @@ CREATE TABLE ledger_entries (
 
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    version INTEGER NOT NULL DEFAULT 0,
-
-    CONSTRAINT fk_entry_payment FOREIGN KEY (payment_id) REFERENCES payments(id) ON DELETE SET NULL
+    version INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE INDEX idx_entry_payment ON ledger_entries(payment_id);

@@ -81,6 +81,20 @@ services:
       - postgres-ledger-data:/var/lib/postgresql/data
       - ./ledger-service/src/main/resources/db/migration:/docker-entrypoint-initdb.d
 
+  # PostgreSQL - Partner Gateway
+  postgres-partner-gateway:
+    image: postgres:15-alpine
+    container_name: postgres-partner-gateway
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_DB: rentflow_partner_gateway
+      POSTGRES_USER: rentflow
+      POSTGRES_PASSWORD: rentflow_password
+    volumes:
+      - postgres-partner-gateway-data:/var/lib/postgresql/data
+      - ./partner-gateway/src/main/resources/db/migration:/docker-entrypoint-initdb.d
+
   # Redis
   redis:
     image: redis:7-alpine
@@ -97,6 +111,7 @@ services:
       context: ./payment-service
       dockerfile: Dockerfile
     container_name: payment-service
+    restart: on-failure
     ports:
       - "8081:8081"
     environment:
@@ -121,6 +136,7 @@ services:
       context: ./scheduling-service
       dockerfile: Dockerfile
     container_name: scheduling-service
+    restart: on-failure
     ports:
       - "8082:8082"
     environment:
@@ -141,10 +157,13 @@ services:
       context: ./partner-gateway
       dockerfile: Dockerfile
     container_name: partner-gateway
+    restart: on-failure
     ports:
       - "8083:8083"
     environment:
       SPRING_PROFILES_ACTIVE: dev
+      DB_HOST: postgres-partner-gateway
+      DB_PORT: 5432
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       PLAID_CLIENT_ID: ${PLAID_CLIENT_ID}
       PLAID_SECRET: ${PLAID_SECRET}
@@ -152,6 +171,7 @@ services:
       STRIPE_API_KEY: ${STRIPE_API_KEY}
     depends_on:
       - kafka
+      - postgres-partner-gateway
 
   # Ledger Service
   ledger-service:
@@ -159,6 +179,7 @@ services:
       context: ./ledger-service
       dockerfile: Dockerfile
     container_name: ledger-service
+    restart: on-failure
     ports:
       - "8084:8084"
     environment:
@@ -205,6 +226,7 @@ volumes:
   postgres-payment-data:
   postgres-scheduling-data:
   postgres-ledger-data:
+  postgres-partner-gateway-data:
   redis-data:
   prometheus-data:
   grafana-data:

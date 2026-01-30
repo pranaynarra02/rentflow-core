@@ -34,6 +34,7 @@ spring:
     job-store-type: jdbc
     jdbc:
       initialize-schema: never
+      platform: postgres
     properties:
       org:
         quartz:
@@ -43,9 +44,16 @@ spring:
           jobStore:
             class: org.quartz.impl.jdbcjobstore.JobStoreTX
             driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+            dataSource: myDS
             tablePrefix: QRTZ_
             isClustered: true
             clusterCheckinInterval: 20000
+          dataSource:
+            myDS:
+              driver: org.postgresql.Driver
+              URL: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/rentflow_scheduling
+              user: ${DB_USER:rentflow}
+              password: ${DB_PASSWORD:rentflow_password}
           threadPool:
             class: org.quartz.simpl.SimpleThreadPool
             threadCount: 10

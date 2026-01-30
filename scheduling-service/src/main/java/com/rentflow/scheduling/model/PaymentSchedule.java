@@ -123,7 +123,8 @@ public class PaymentSchedule {
     private Instant updatedAt;
 
     @Version
-    private Integer version;
+    @Builder.Default
+    private Integer version = 0;
 
     public Instant calculateNextExecution() {
         LocalDate base = lastExecutionTime != null

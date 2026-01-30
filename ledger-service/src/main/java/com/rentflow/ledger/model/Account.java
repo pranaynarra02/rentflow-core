@@ -68,7 +68,8 @@ public class Account {
     private Instant updatedAt;
 
     @Version
-    private Integer version;
+    @Builder.Default
+    private Integer version = 0;
 
     public void debit(BigDecimal amount) {
         if (accountType == AccountType.ASSET || accountType == AccountType.EXPENSE) {

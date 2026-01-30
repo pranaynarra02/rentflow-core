@@ -42,6 +42,7 @@ public class Payment {
     private BigDecimal amount;
 
     @Column(nullable = false, length = 3)
+    @Builder.Default
     private String currency = "USD";
 
     @Enumerated(EnumType.STRING)
@@ -66,6 +67,7 @@ public class Payment {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     private PaymentStatus status = PaymentStatus.PENDING;
 
     @Column(precision = 19, scale = 2)
@@ -81,9 +83,11 @@ public class Payment {
     private String failureReason;
 
     @Column(nullable = false)
+    @Builder.Default
     private Integer retryCount = 0;
 
     @Column(nullable = false)
+    @Builder.Default
     private Integer maxRetries = 3;
 
     @Column
@@ -105,15 +109,11 @@ public class Payment {
     private String metadata;
 
     @Column
+    @Builder.Default
     private Boolean partialPayment = false;
 
-    @Column
+    @Column(name = "parent_payment_id")
     private UUID parentPaymentId;
-
-    @Column
-    @Builder.Default
-    @OneToMany(mappedBy = "parentPayment", cascade = CascadeType.ALL)
-    private List<Payment> partialPayments = new ArrayList<>();
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -124,7 +124,8 @@ public class Payment {
     private Instant updatedAt;
 
     @Version
-    private Integer version;
+    @Builder.Default
+    private Integer version = 0;
 
     @PrePersist
     protected void onCreate() {

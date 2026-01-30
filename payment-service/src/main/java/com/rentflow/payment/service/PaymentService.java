@@ -84,7 +84,7 @@ public class PaymentService {
         var parent = paymentRepository.findById(request.parentPaymentId())
             .orElseThrow(() -> new IllegalArgumentException("Parent payment not found"));
 
-        var partial = Payment.builder()
+        return Payment.builder()
             .id(UUID.randomUUID())
             .tenantId(request.tenantId())
             .propertyId(request.propertyId())
@@ -100,9 +100,6 @@ public class PaymentService {
             .partialPayment(true)
             .parentPaymentId(parent.getId())
             .build();
-
-        parent.getPartialPayments().add(partial);
-        return partial;
     }
 
     @Cacheable(value = "payments", key = "#id")
@@ -228,7 +225,8 @@ public class PaymentService {
     }
 
     private PaymentResponse toResponse(Payment payment) {
-        var partialSummaries = payment.getPartialPayments().stream()
+        var partialPayments = paymentRepository.findByParentPaymentId(payment.getId());
+        var partialSummaries = partialPayments.stream()
             .map(pp -> new PaymentResponse.PartialPaymentSummary(
                 pp.getId(),
                 pp.getAmount(),

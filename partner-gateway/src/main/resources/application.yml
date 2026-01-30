@@ -4,6 +4,20 @@ spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
 
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/rentflow_partner_gateway
+    username: ${DB_USER:rentflow}
+    password: ${DB_PASSWORD:rentflow_password}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+
+  flyway:
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     producer:

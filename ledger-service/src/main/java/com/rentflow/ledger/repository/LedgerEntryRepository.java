@@ -22,7 +22,9 @@ public interface LedgerEntryRepository extends JpaRepository<LedgerEntry, UUID> 
 
     List<LedgerEntry> findByLeaseIdOrderByEntryDateDesc(UUID leaseId);
 
-    List<LedgerEntry> findByAccountNumberOrderByEntryDateDesc(String accountNumber);
+    List<LedgerEntry> findByDebitAccountNumberOrCreditAccountNumberOrderByEntryDateDesc(
+        String debitAccountNumber, String creditAccountNumber
+    );
 
     List<LedgerEntry> findByStatusAndEntryDateBefore(EntryStatus status, Instant date);
 

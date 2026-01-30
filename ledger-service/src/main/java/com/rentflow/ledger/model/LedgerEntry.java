@@ -111,7 +111,8 @@ public class LedgerEntry {
     private Instant updatedAt;
 
     @Version
-    private Integer version;
+    @Builder.Default
+    private Integer version = 0;
 
     @PrePersist
     protected void onCreate() {

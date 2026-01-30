@@ -86,5 +86,6 @@ public class PaymentInitiation {
     private Instant updatedAt;
 
     @Version
-    private Integer version;
+    @Builder.Default
+    private Integer version = 0;
 }
